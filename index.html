@@ -16,9 +16,35 @@
   </head>
   <body>
     <!-- Open Modal -->
+    <div class="modal-container" id="modal">
+      <div class="modal">
+        <i class="fas fa-times close-icon" id="close-modal"></i>
+        <div class="modal-header">
+          <h3>Add Bookmark</h3>
+        </div>
+        <div class="modal-content">
+          <form action="" id="bookmark-form">
+            <!-- Website Name -->
+            <div class="form-group">
+              <label for="website-name" class="form-label">Website Name</label>
+              <input type="text" class="form-input" id="website-name" />
+            </div>
+
+            <!-- Website URL -->
+            <div class="form-group">
+              <label for="website-url" class="form-label">Website URL</label>
+              <input type="text" class="form-input" id="website-url" />
+            </div>
+
+            <button type="submit">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <h1 id="show-modal">Add Bookmark</h1>
 
-    <!-- Booksmarks -->
+    <!-- Bookmarks -->
     <div class="container" id="container">
       <div class="item">
         <i class="fa-light fa-octagon-xmark" id="delete-bookmark" title="Delete"
