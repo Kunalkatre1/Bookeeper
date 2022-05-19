@@ -6,6 +6,9 @@ const websiteNameEl = document.getElementById('website-name');
 const websiteUrlEl = document.getElementById('website-url');
 const bookmarksContainer = document.getElementById('bookmarks-container');
 
+let bookmarks = [];
+
+
 // Show Modal, Focus on Input
 
 function showModal(){
@@ -41,6 +44,93 @@ function validateForm(nameValue, urlValue){
     return true;
 }
 
+// Delete Bookmark
+
+function deleteBookmark(url){
+
+    bookmarks.forEach((bookmark, i) => {
+        console.log('Inside loop' , i, url, bookmarks);
+        if (bookmark.url === url){
+            console.log(i);
+            // splice( index, no_of_objects_to_be_removed)
+            bookmarks.splice(i, 1);
+            console.log(bookmark);
+        }
+    });  
+    // Update bookmarks array in localStorage, re-populate DOM
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    
+    fetchBookmarks();   
+}
+
+// Build Bookmark DOM
+
+function buildBookmark(){
+
+    // Remove All Bookmark elements
+    bookmarksContainer.textContent = '';
+
+    // Build Items
+    bookmarks.forEach(bookmark => {
+        const {name, url} = bookmark;
+
+        // Create Item
+        const item = document.createElement('div');
+        item.classList.add('item');
+
+        //Close Icon
+        const closeIcon = document.createElement('i');
+        closeIcon.classList.add('fas', 'fa-times');
+        closeIcon.setAttribute('title', 'Delete Bookmark');
+        closeIcon.setAttribute('onclick', `deleteBookmark('${url}')`);
+
+        // Favicon Link Container
+        const linkInfo = document.createElement('div');
+        linkInfo.classList.add('name');
+
+        //favicon
+        const favicon = document.createElement('img');
+        favicon.setAttribute('src', `https://s2.googleusercontent.com/s2/favicons?domain=${url}`);
+        favicon.setAttribute('alt', 'Favicon');
+
+        // Link
+        const link = document.createElement('a');
+        link.setAttribute('href', `${url}`);
+        link.setAttribute('target', '_blank');
+        link.textContent = name;
+
+        //Append to Bookmark container
+        linkInfo.append(favicon, link);
+        item.append(closeIcon, linkInfo);
+        bookmarksContainer.appendChild(item);
+
+    });
+}
+
+
+// Fetch Bookmarks from Local storage
+function fetchBookmarks(){
+
+    // Get Bookmarks from localStorage if available
+    if(localStorage.getItem('bookmarks')){
+
+        bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+    }
+    else{
+        
+        // Create boomarks array in localStorage
+        bookmarks = [
+            {
+                name : 'KK Design Studio',
+                url : 'https://kkdesignstudio.com',
+            },
+        ];
+
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));     
+    }
+    
+    buildBookmark();
+}
 
 // Handle Data from Form
 function storeBookmark(e) {
@@ -55,7 +145,21 @@ function storeBookmark(e) {
     if (!validateForm(nameValue, urlValue)){
         return false;
     }
+
+    const bookmark = {
+        name : nameValue,
+        url : urlValue
+    };
+
+    bookmarks.push(bookmark);
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    fetchBookmarks();
+    bookmarkForm.reset();
+    websiteNameEl.focus();
 }
 
 // Event Listener
 bookmarkForm.addEventListener('submit', storeBookmark);
+
+// On Load, Fetch Bookmarks
+fetchBookmarks();
