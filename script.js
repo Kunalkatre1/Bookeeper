@@ -67,7 +67,7 @@ function deleteBookmark(url){
 
 function buildBookmark(){
 
-    // Remove All Bookmark elements
+    // Remove All Bookmark elements - Setting text node to remove all the current bookmark items.
     bookmarksContainer.textContent = '';
 
     // Build Items
